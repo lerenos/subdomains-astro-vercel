@@ -1,0 +1,30 @@
+---
+// All sites
+// Create site
+
+import { db, eq, and, Users, Sites, Pages } from "astro:db";
+
+let user = ( await db.select().from(Users).where(eq(Users.id, 1)) )[0]
+let sites = await db.select().from(Sites).where(eq(Sites.userId, user.id))
+
+const title = "All Sites for " + user.name
+
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body class="prose mx-auto">
+		<h1>{title}</h1>
+
+        {
+            sites ? sites.map(item => <a href={"/sites/"+item.subdomain}>{item.subdomain}</a>) : "There are no pages here. Create the first."
+        }
+
+    </body>
+</html>

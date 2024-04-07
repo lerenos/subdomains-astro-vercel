@@ -1,0 +1,54 @@
+---
+import { Code } from "astro-expressive-code/components";
+import { db, eq, Users, Sites, Pages } from "astro:db";
+
+const { subdomain, slug } = Astro.params;
+
+let rawPages = await db.select()
+  .from(Pages)
+  .innerJoin(Sites, eq(Pages.siteId, Sites.id))
+
+let pages = []
+rawPages.map(x => { 
+
+  let isOwnerDoubleChecked = x.Pages.userId === x.Sites.userId
+
+  if (isOwnerDoubleChecked){
+    let item = x.Pages
+    item.subdomain = x.Sites.subdomain
+    pages.push(item)
+  } else {
+    console.warn(`WARNING: The page /${x.Pages.slug} (id = ${x.Pages.id}) is linked to the subdomain "${x.Sites.subdomain}", but the userId is mismatching. Page UserId = ${x.Pages.userId}, but site UserId = ${x.Sites.userId}. The page is not going to be rendered, but please verify what's going on.`)
+  }
+
+})
+
+const page = pages.find((page) => {
+  if (slug){
+    return page.subdomain===subdomain && page.slug === slug
+  } else{
+    return page.subdomain===subdomain && !page.slug
+  }
+});
+
+if (!page) return new Response(null,{status: 404})
+
+const { title, body } = page;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body class="prose mx-auto">
+		<h1>{title}</h1>
+    <p>Confirming the slug of the page: <em>{slug}</em></p>
+    <p>And it makes part of the <em>{subdomain}.</em> subdomain</p>
+    <p>A json from database:</p>
+    <Code code={body + "\r\r//Cool code blocks provided by astro-expressive-code"} lang="json" title="I decided to put a json at the body:"/>
+	</body>
+</html>

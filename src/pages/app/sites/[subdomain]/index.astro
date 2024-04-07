@@ -1,0 +1,57 @@
+---
+// Dashboard of {subdomain}
+// Create post
+// List all posts of that site (update or delete)
+// Site Config
+
+import { db, eq, and, Users, Sites, Pages } from "astro:db";
+
+const { subdomain } = Astro.params;
+
+let user = ( await db.select().from(Users).where(eq(Users.id, 1)) )[0]
+let site = ( await db.select().from(Sites).where(and(eq(Sites.userId, user.id),eq(Sites.subdomain, subdomain))) )[0]
+
+if (!site){ return Astro.redirect("/app/sites/")}
+
+let pages = await db.select().from(Pages).where(and(eq(Pages.siteId, site.id),eq(Pages.userId, user.id)))
+let redirects = undefined //to do
+
+const title = site.subdomain + " website"
+
+//----------------------- INSERT PAGES
+if (Astro.request.method === 'POST') {
+  // parse form data
+  const formData = await Astro.request.formData();
+  const title = formData.get('title');
+  const body = formData.get('body');
+  if (typeof title === 'string' && typeof body === 'string') {
+    // insert form data into the Comment table
+    await db.insert(Pages).values({ title, body });
+  }
+}
+
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body class="prose mx-auto">
+		<h1>{title}</h1>
+
+    <h2>Pages</h2>
+        {
+            pages ? <ul>{pages.map(item => <li><a href={`/sites/${site.subdomain}/pages/${item.id}`}>{item.title}</a></li>)}</ul> : <p>There are no pages here. Create the first.</p>
+        }
+
+    <h2>Custom Links and Redirects</h2>
+        {
+            redirects ? <ul>{redirects.map(item => <li><a href={`/sites/${site.subdomain}/redirects/${item.id}`}>{item.title}</a></li>)}</ul> : <p>There are no redirects. Create the first.</p>
+        }
+
+    </body>
+</html>
