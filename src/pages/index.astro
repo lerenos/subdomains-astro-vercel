@@ -1,4 +1,9 @@
 ---
+import { SignedIn, SignedOut } from "astro-clerk-auth/components/control";
+import { UserButton, SignIn } from "astro-clerk-auth/components/interactive";
+
+
+import { ptBR } from "@clerk/localizations";
 
 ---
 
@@ -12,5 +17,12 @@
 	</head>
 	<body>
 		<h1>Just a static traditional page for the home</h1>
+		<SignedIn>
+			<UserButton />
+		</SignedIn>
+	
+		<SignedOut>
+			<SignIn routing="hash" />
+		</SignedOut>
 	</body>
 </html>

@@ -18,33 +18,29 @@ if (!page) return new Response(null,{status: 404})
 const title = "Edit "+page.title
 
 //----------------------- INSERT PAGES
-if (Astro.request.method === 'POST') {
-  console.log(Astro.request.method)
-  // parse form data
-  const formData = await Astro.request.formData();
-  const slug = formData.get('slug');
-  const title = formData.get('title');
-  const body = formData.get('body');
-  if (typeof slug === 'string' 
-    && typeof title === 'string'
-    && typeof body === 'string'
-  ) {
-    // insert form data into the Pages table
-    try{
-      await db.insert(Pages).values([
-		{ id: 7, siteId: 1, userId: 1, slug: null, title: 'Test', body: '{"component":"test"}'},
-	])
-      const res = await db.update(Pages)
-      .set({slug, title, body:"hi" })
-      .where(and(eq(Pages.id, id),eq(Pages.siteId, site.id),eq(Pages.userId, user.id))).returning({ updatedBody: Pages.body });
-      console.log(res)
-    } catch (e) {
-      console.log(e)
-    }
-  } else{
-    console.log("test failed")
-  }
-}
+// if (Astro.request.method === 'POST') {
+//   // parse form data
+//   const formData = await Astro.request.formData();
+//   const slug = formData.get('slug');
+//   const title = formData.get('title');
+//   const body = formData.get('body');
+//   if (typeof slug === 'string' 
+//     && typeof title === 'string'
+//     && typeof body === 'string'
+//   ) {
+//     // insert form data into the Pages table
+//     try{
+//       const res = await db.update(Pages)
+//       .set({slug, title, body })
+//       .where(and(eq(Pages.id, id),eq(Pages.siteId, site.id),eq(Pages.userId, user.id))).returning({ updatedBody: Pages.body });
+//       console.log(res)
+//     } catch (e) {
+//       console.log(e)
+//     }
+//   } else{
+//     console.log("test failed")
+//   }
+// }
 
 ---
 
@@ -75,3 +71,54 @@ if (Astro.request.method === 'POST') {
 
 	</body>
 </html>
+<script define:vars={{id}}>
+
+const BASE = "http://localhost:4321/api"
+
+document.querySelector("form")?.addEventListener("submit", async (e) => {
+
+  e.preventDefault()
+  const formData = new FormData(e.currentTarget)
+
+  const res = await fetch(`${BASE}/pages/${id}`,{
+        method: "POST",
+        body: formData
+    })
+    .then(res => {
+        return res.json()
+    })
+    .catch(err => {
+        console.error("Error on Update", err.message)
+        return err
+    })
+    // .finally(()=>this.getPosts())
+
+    //do something with the feedback
+    console.log(res)
+
+})
+
+document.querySelector("#trash-it")?.addEventListener("click", async (e) => {
+  e.preventDefault()
+  let formData = new FormData(e.currentTarget)
+  formData.set("isTrash", true) //Move to trash
+
+  const res = await fetch(`${BASE}/pages/${id}`,{
+      method: "POST",
+      body: formData
+  })
+  .then(res => {
+      return res.json()
+  })
+  .catch(err => {
+      console.error("Error on Update", err.message)
+      return err
+  })
+  // .finally(()=>this.getPosts())
+
+  //do something with the feedback
+  console.log(res)
+
+})
+
+</script>

@@ -23,7 +23,7 @@ const title = "All Sites for " + user.name
 		<h1>{title}</h1>
 
         {
-            sites ? sites.map(item => <a href={"/sites/"+item.subdomain}>{item.subdomain}</a>) : "There are no pages here. Create the first."
+            sites ? sites.map(item => <a href={item.subdomain}>{item.subdomain}</a>) : "There are no pages here. Create the first."
         }
 
     </body>

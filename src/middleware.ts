@@ -1,12 +1,13 @@
 import { sequence } from "astro:middleware";
+import { clerkMiddleware, createRouteMatcher } from "astro-clerk-auth/server";
 
-async function subdomainRouting(context, next) {
+const subdomainRoute = async (context, next) => {
 
     const url = context.url   
     const hostnameParts = url.hostname.split(".").reverse()
     const rootDomain = hostnameParts[0]
     const subdomain = hostnameParts[1]
-    
+
     if(subdomain  
         && !context.request.headers.has("X-Astro-Rewrite")
         && !url.pathname.startsWith('/_astro')
@@ -63,11 +64,25 @@ async function subdomainRouting(context, next) {
         /* End of the Astro workaround */
     } 
 
-    next()
+    return next()
     // next({headers: { 'x-from-middleware': 'true' }})
 }
 
-export const onRequest = sequence(subdomainRouting)
+const isProtectedPage = createRouteMatcher(['/app(.*)'])
+
+const authClerk = clerkMiddleware((auth, context, next) => {
+    if (isProtectedPage(context.request) && !auth().userId) {
+      return auth().redirectToSignIn();
+    }
+    return next();
+  });
+
+
+export const onRequest = sequence(authClerk,subdomainRoute)
+
+
+
+
 
 // export const config = {
 //   matcher: [

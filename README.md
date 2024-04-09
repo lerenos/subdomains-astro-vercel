@@ -1,4 +1,17 @@
-# Astro Starter Kit: Minimal
+# Astro Platforms Starter Kit - Vercel + Astro DB + Clerk
+
+
+
+## Inspired by
+[Vercel Platforms Starter Kit](https://vercel.com/guides/nextjs-multi-tenant-application)
+
+### On subdomain routing 
+[text](https://medium.com/@jfbaraky/using-subdomains-as-paths-on-next-js-e5aab5c28c28)
+[text](https://github.com/TheBassGuy/astro-multitenant-middleware/blob/master/src/middleware.ts)
+[text](https://github.com/withastro/astro/commit/05c48444e94963d68e15a6ed70887b9749065860)
+[text](https://github.com/withastro/roadmap/discussions/802)
+[text](https://github.com/withastro/roadmap/discussions/665)
+[Reroute API RFC](https://github.com/withastro/roadmap/discussions/681)
 
 ```sh
 npm create astro@latest -- --template minimal
