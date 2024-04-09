@@ -3,6 +3,13 @@
 // Create site
 
 import { db, eq, and, Users, Sites, Pages } from "astro:db";
+import { UserButton } from "astro-clerk-auth/components/interactive";
+
+const auth = Astro.locals.auth()
+const userC = await Astro.locals.currentUser()
+
+console.dir(auth)
+console.log(userC)
 
 let user = ( await db.select().from(Users).where(eq(Users.id, 1)) )[0]
 let sites = await db.select().from(Sites).where(eq(Sites.userId, user.id))
@@ -19,12 +26,18 @@ const title = "All Sites for " + user.name
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body class="prose mx-auto">
-		<h1>{title}</h1>
+	<body>
 
-        {
-            sites ? sites.map(item => <a href={item.subdomain}>{item.subdomain}</a>) : "There are no pages here. Create the first."
-        }
+		<nav class="p-4 float-right">
+			<UserButton />
+		</nav>
+		<section class="prose mx-auto">
+			<h1>{title}</h1>
+
+			{
+				sites ? sites.map(item => <a href={item.subdomain}>{item.subdomain}</a>) : "There are no pages here. Create the first."
+			}
+		</section>
 
     </body>
 </html>
