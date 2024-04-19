@@ -10,6 +10,7 @@ import {
   EditorContent,
   EditorRoot
 } from "novel";
+import { handleCommandNavigation } from "novel/extensions";
 import { Editor as EditorInstance } from '@tiptap/core';
 
 import { NodeSelector } from "./bubble/node-selector";
@@ -49,6 +50,14 @@ export default () => {
         debouncedUpdates(editor);
         setSaveStatus("Unsaved");
       }}
+      editorProps={{
+        handleDOMEvents: {
+          keydown: (_view, event) => handleCommandNavigation(event),
+        },
+        attributes: {
+          class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full`,
+        }
+      }}
     >
 
     <EditorCommand className='z-50 not-prose h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-white px-1 py-2 shadow-md transition-all'>
@@ -59,7 +68,7 @@ export default () => {
           onCommand={(val) => item.command(val)}
           className={`flex not-prose w-full items-center justify-items-center gap-2 rounded-md px-2 py-1 text-left text-sm hover:bg-base-200 aria-selected:bg-base-200`}
           key={item.title}>
-            <div className='flex h-10 w-10 items-center justify-center rounded-md border border-muted bg-background'>
+            <div className='flex h-10 w-10 items-center justify-center rounded-md border border-muted bg-base-100'>
               {item.icon}
             </div>
             <div>
