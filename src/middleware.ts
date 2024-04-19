@@ -78,6 +78,7 @@ const authClerk = clerkMiddleware((auth, context, next) => {
   });
 
 
+// export const onRequest = sequence(subdomainRoute)
 export const onRequest = sequence(authClerk,subdomainRoute)
 
 
