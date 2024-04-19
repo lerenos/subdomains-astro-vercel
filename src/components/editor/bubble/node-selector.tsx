@@ -118,7 +118,7 @@ export const NodeSelector = ({ open, onOpenChange }: NodeSelectorProps) => {
           <ChevronDown className="h-4 w-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent sideOffset={5} align="start" className="w-48 p-1">
+      <PopoverContent sideOffset={5} align="start" className="w-48 p-1 bg-base-100">
         {items.map((item, index) => (
           <EditorBubbleItem
             key={index}
@@ -129,7 +129,7 @@ export const NodeSelector = ({ open, onOpenChange }: NodeSelectorProps) => {
             className="flex cursor-pointer items-center justify-between rounded-sm px-2 py-1 text-sm hover:bg-accent"
           >
             <div className="flex items-center space-x-2">
-              <div className="rounded-sm border p-1">
+              <div className="rounded-sm border p-1 bg-base-100">
                 <item.icon className="h-3 w-3" />
               </div>
               <span>{item.name}</span>

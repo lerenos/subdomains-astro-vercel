@@ -132,7 +132,7 @@ export const ColorSelector = ({ open, onOpenChange }) => {
 
       <PopoverContent
         sideOffset={5}
-        className="my-1 flex max-h-80 w-48 flex-col overflow-hidden overflow-y-auto rounded border p-1 shadow-xl "
+        className="my-1 flex max-h-80 w-48 flex-col overflow-hidden overflow-y-auto rounded border p-1 shadow-xl bg-base-100"
         align="start"
       >
         <div className="flex flex-col">
@@ -155,7 +155,7 @@ export const ColorSelector = ({ open, onOpenChange }) => {
             >
               <div className="flex items-center gap-2">
                 <div
-                  className="rounded-sm border px-2 py-px font-medium"
+                  className="rounded-sm border px-2 py-px font-medium bg-base-100"
                   style={{ color }}
                 >
                   A
