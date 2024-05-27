@@ -64,7 +64,7 @@ const title = "Edit "+page.title
       
       <div id="editor-wrapper">
 
-         <Editor client:load /> 
+         <Editor initialValue={JSON.parse((JSON.parse(page.body))?.json)} client:load />
 
       </div>
 
@@ -105,7 +105,7 @@ document.querySelector("form")?.addEventListener("submit", async (e) => {
 
   e.preventDefault()
   let formData = new FormData(e.currentTarget)
-  formData.set("body", window.localStorage.novel__content)
+  formData.set("body", JSON.stringify({json: window.localStorage.novel__content, html: window.localStorage.novel__html}))
 
   const res = await fetch(`${BASE}/pages/${id}`,{
         method: "POST",

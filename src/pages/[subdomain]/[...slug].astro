@@ -48,7 +48,8 @@ const { title, body } = page;
 		<h1>{title}</h1>
     <p>Confirming the slug of the page: <em>{slug}</em></p>
     <p>And it makes part of the <em>{subdomain}.</em> subdomain</p>
+    {<Fragment set:html={JSON.parse(body)?.html}/>}
     <p>A json from database:</p>
-    <Code code={body + "\r\r//Cool code blocks provided by astro-expressive-code"} lang="json" title="I decided to put a json at the body:"/>
+    <Code code={JSON.parse(body)?.json} wrap lang="json" title="I decided to put a json at the body:"/>
 	</body>
 </html>

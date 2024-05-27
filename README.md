@@ -4,6 +4,7 @@
 
 ## Inspired by
 [Vercel Platforms Starter Kit](https://vercel.com/guides/nextjs-multi-tenant-application)
+[B2B SaaS Kit Template](https://astro.build/themes/details/b2b-saas-kit/)
 
 ### On subdomain routing 
 [text](https://medium.com/@jfbaraky/using-subdomains-as-paths-on-next-js-e5aab5c28c28)

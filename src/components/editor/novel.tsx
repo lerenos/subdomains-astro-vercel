@@ -8,7 +8,8 @@ import {
   EditorCommandItem,
   EditorCommandEmpty,
   EditorContent,
-  EditorRoot
+  EditorRoot,
+  type JSONContent
 } from "novel";
 import { handleCommandNavigation } from "novel/extensions";
 import { Editor as EditorInstance } from '@tiptap/core';
@@ -25,8 +26,12 @@ const extensions = [...defaultExtensions, slashCommand];
 import { useDebouncedCallback } from "use-debounce";
 import { useState } from "react";
 
+interface EditorProp {
+  initialValue?: JSONContent;
+  onChange: (value: JSONContent) => void;
+}
 
-export default () => {
+export default ({ initialValue, onChange }: EditorProp) => {
   // const [content, setContent] = useState(null);
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [openNode, setOpenNode] = useState(false);
@@ -36,8 +41,11 @@ export default () => {
 
   const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance) => {
     const json = editor.getJSON();
+    const html = editor.getHTML();
+    console.log(html)
     // setContent(json);
     window.localStorage.setItem("novel__content", JSON.stringify(json));
+    window.localStorage.setItem("novel__html", html);
     setSaveStatus("Saved");
   }, 500);
 
@@ -45,6 +53,7 @@ export default () => {
   return ( 
   <EditorRoot>
     <EditorContent
+      {...(initialValue && { initialContent: initialValue })}
       extensions={extensions}
       onUpdate={({ editor }) => {
         debouncedUpdates(editor);
