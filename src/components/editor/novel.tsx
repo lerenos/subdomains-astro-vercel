@@ -32,7 +32,7 @@ interface EditorProp {
 }
 
 export default ({ initialValue, onChange }: EditorProp) => {
-  // const [content, setContent] = useState(null);
+  const [content, setContent] = useState({});
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [openNode, setOpenNode] = useState(false);
   const [openColor, setOpenColor] = useState(false);
@@ -42,8 +42,7 @@ export default ({ initialValue, onChange }: EditorProp) => {
   const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance) => {
     const json = editor.getJSON();
     const html = editor.getHTML();
-    console.log(html)
-    // setContent(json);
+    setContent(json);
     window.localStorage.setItem("novel__content", JSON.stringify(json));
     window.localStorage.setItem("novel__html", html);
     setSaveStatus("Saved");

@@ -2,15 +2,15 @@ import { defineDb, defineTable, column } from 'astro:db';
 
 const Users = defineTable({
 	columns: {
-		id: column.number({ primaryKey: true }),
-		name: column.text(),
+		id: column.text({ primaryKey: true }),
+		firstName: column.text(),
 	}
 });
   
 const Sites = defineTable({
 	columns: {
 		id: column.number({ primaryKey: true }),
-		userId: column.number({ references: () => Users.columns.id }),
+		userId: column.text({ references: () => Users.columns.id }),
 		subdomain: column.text({ unique: true }),
 	}
 });
@@ -18,11 +18,12 @@ const Sites = defineTable({
 const Pages = defineTable({
 	columns: {
 		id: column.number({ primaryKey: true }),
-		userId: column.number({ references: () => Users.columns.id }),
+		userId: column.text({ references: () => Users.columns.id }),
 		siteId: column.number({ references: () => Sites.columns.id }),
 		slug: column.text({optional: true}),
 		title: column.text(),
-		body: column.json(),
+		json: column.json({optional: true}),
+		html: column.text({optional: true}),
 	}
 }) ;
 

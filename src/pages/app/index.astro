@@ -1,6 +1,44 @@
 ---
+import Navbar from "@/layout/navbar/app.astro"
+
+import { db, eq, Users, Sites } from "astro:db";
+
+const currentUser  = await Astro.locals.currentUser()
+
+let user = ( await db.select().from(Users).where(eq(Users.id, currentUser?.id)) )[0]
+let sites = await db.select().from(Sites).where(eq(Sites.userId, user.id))
+
+const name = user?.firstName
+
 // Welcome, User
 // Stats
 // List all sites - go
 // Create new site
 ---
+<html lang="pt-BR">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>App Home</title>
+	</head>
+	<body>
+        <Navbar/>
+		<main class="p-12 prose max-w-full">
+			<h1>Welcome home, {name}</h1>
+            <section>
+                <h2>Stats</h2>
+            </section>
+            <section>
+                <h2>All your Sites</h2>
+				<ul>
+					{
+						sites ? sites.map(item => <li><a href={`${Astro.url.pathname}${Astro.url.pathname.endsWith("/")?"":"/"}sites/${item.subdomain}/`}>{item.subdomain}</a></li>) : "There are no pages here. Create the first."
+					}
+				</ul>
+                Create a new site
+            </section>
+		</main>
+	</body>
+</html>

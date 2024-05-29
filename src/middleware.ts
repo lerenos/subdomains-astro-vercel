@@ -1,5 +1,7 @@
 import { sequence } from "astro:middleware";
 import { clerkMiddleware, createRouteMatcher } from "astro-clerk-auth/server";
+import { db, eq, and, Users, Sites, Pages } from "astro:db";
+import { User } from "lucide-react";
 
 const subdomainRoute = async (context, next) => {
 
@@ -70,10 +72,37 @@ const subdomainRoute = async (context, next) => {
 
 const isProtectedPage = createRouteMatcher(['/app(.*)'])
 
-const authClerk = clerkMiddleware((auth, context, next) => {
+const authClerk = clerkMiddleware(async (auth, context, next) => {
     if (isProtectedPage(context.request) && !auth().userId) {
-      return auth().redirectToSignIn();
+        return auth().redirectToSignIn();
+    } else if (isProtectedPage(context.request) && auth().userId) {
+
+        let clerkUser = await context.locals.currentUser()
+        let UserId = clerkUser?.id
+
+        let user = (await db.select().from(Users).where(eq(Users.id, UserId)))[0] // Check if user exists on site database
+
+        if (!user) {
+            // News user on site database 
+            await db.insert(Users).values({
+                id: UserId,
+                firstName: clerkUser?.firstName 
+            });
+
+            // Insert example site and pages
+            console.log("Inserting example site and pages...");
+            const exampleSite = await db.insert(Sites).values({
+                userId: UserId,
+                subdomain: 'test' //verify first
+            }).returning({siteId: Sites.id});
+            await db.insert(Pages).values([
+                { siteId: exampleSite[0].siteId, userId: UserId, slug: null, title: 'Home', json: '{"component":"section"}', html: '<h2>This is some sample html</h2>'},
+                { siteId: exampleSite[0].siteId, userId: UserId, slug:'about', title: 'About', json: '{"component":"section"}', html: '<h2>This is some sample html</h2>'},
+            ]);
+            // End of inserting example site and pages
+        }
     }
+    
     return next();
   });
 

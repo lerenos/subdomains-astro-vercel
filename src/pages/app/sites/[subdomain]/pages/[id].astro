@@ -4,7 +4,9 @@ import Editor from "@/components/editor/novel"
 
 const { subdomain, id } = Astro.params;
 
-let user = ( await db.select().from(Users).where(eq(Users.id, 1)) )[0] //Get the user.id
+const currentUser  = await Astro.locals.currentUser()
+
+let user = ( await db.select().from(Users).where(eq(Users.id, currentUser?.id)) )[0] //Get the user.id
 let site = ( await db.select().from(Sites).where(and(eq(Sites.userId, user.id),eq(Sites.subdomain, subdomain))) )[0] //Get site.id
 
 let page = await db.select().from(Pages).where(and(
@@ -64,7 +66,7 @@ const title = "Edit "+page.title
       
       <div id="editor-wrapper">
 
-         <Editor initialValue={JSON.parse((JSON.parse(page.body))?.json)} client:load />
+         <Editor initialValue={JSON.parse(page.json)} client:load />
 
       </div>
 
@@ -105,7 +107,8 @@ document.querySelector("form")?.addEventListener("submit", async (e) => {
 
   e.preventDefault()
   let formData = new FormData(e.currentTarget)
-  formData.set("body", JSON.stringify({json: window.localStorage.novel__content, html: window.localStorage.novel__html}))
+  formData.set("json", window.localStorage.novel__content)
+  formData.set("html", window.localStorage.novel__html)
 
   const res = await fetch(`${BASE}/pages/${id}`,{
         method: "POST",

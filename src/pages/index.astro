@@ -2,6 +2,9 @@
 import { SignedIn, SignedOut } from "astro-clerk-auth/components/control";
 import { UserButton, SignIn } from "astro-clerk-auth/components/interactive";
 
+const user  = await Astro.locals.currentUser()
+const name = user?.firstName
+
 ---
 
 <html lang="pt-BR">
@@ -10,16 +13,22 @@ import { UserButton, SignIn } from "astro-clerk-auth/components/interactive";
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>Astro Saas Template with Subdomains</title>
 	</head>
 	<body>
-		<h1>Just a static traditional page for the home</h1>
-		<SignedIn>
-			<UserButton />
-		</SignedIn>
-	
-		<SignedOut>
-			<SignIn routing="hash" />
-		</SignedOut>
+		<main class="prose mx-auto pt-12">
+			<h1>This is the Home of the SaaS</h1>
+		</main>
+		<section class="mx-auto w-fit p-8">
+			<SignedIn>
+				<div class="text-center">
+					<UserButton />
+					<p>Hi, {name}! You're in.</p>
+				</div>
+			</SignedIn>
+			<SignedOut>
+				<SignIn routing="hash" />
+			</SignedOut>
+		</section>
 	</body>
 </html>
