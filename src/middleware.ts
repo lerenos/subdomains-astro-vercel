@@ -96,8 +96,8 @@ const authClerk = clerkMiddleware(async (auth, context, next) => {
                 subdomain: 'test' //verify first
             }).returning({siteId: Sites.id});
             await db.insert(Pages).values([
-                { siteId: exampleSite[0].siteId, userId: UserId, slug: null, title: 'Home', json: '{"component":"section"}', html: '<h2>This is some sample html</h2>'},
-                { siteId: exampleSite[0].siteId, userId: UserId, slug:'about', title: 'About', json: '{"component":"section"}', html: '<h2>This is some sample html</h2>'},
+                { siteId: exampleSite[0].siteId, userId: UserId, slug: null, title: 'Home', json: '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Hello 👋"}]}]}', html: '<h2>This is some sample html</h2>'},
+                { siteId: exampleSite[0].siteId, userId: UserId, slug:'about', title: 'About', json: '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Hello 👋"}]}]}', html: '<h2>This is some sample html</h2>'},
             ]);
             // End of inserting example site and pages
         }

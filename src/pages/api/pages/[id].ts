@@ -1,20 +1,22 @@
 import type { APIRoute } from "astro";
 import { db, eq, and, Users, Sites, Pages } from "astro:db";
 
-let user = ( await db.select().from(Users).where(eq(Users.id, 1)) )[0] //Get the user.id
 // let site = ( await db.select().from(Sites).where(and(eq(Sites.userId, user.id),eq(Sites.subdomain, subdomain))) )[0] //Get site.id
 
-export const POST: APIRoute = async ({ request, params }) => {
+export const POST: APIRoute = async ({ request, params, locals }) => {
+
+    // Get the user
+    const currentUser  = await locals.currentUser()
+    let user = ( await db.select().from(Users).where(eq(Users.id, currentUser?.id)) )[0]
 
     const { id } = params
 
     const data = await request.formData();
 
+    // Validate the data - you'll probably want to do more than this
     const slug = data.get("slug");
     const title = data.get("title");
-    const body = data.get("body");
-    // Validate the data - you'll probably want to do more than this
-    if (!slug || !title || !body) {
+    if (!slug || !title ) {
       return new Response(
         JSON.stringify({
           message: "Missing required fields",
@@ -23,8 +25,11 @@ export const POST: APIRoute = async ({ request, params }) => {
       );
     }
 
+
+    // Update with the new values
+    const newValues = Object.fromEntries(data)
     const res = await db.update(Pages)
-    .set({slug, title, body })
+    .set(newValues)
     .where(and(
         eq(Pages.id, id),
         // eq(Pages.siteId, site.id),
@@ -41,6 +46,11 @@ export const POST: APIRoute = async ({ request, params }) => {
   };
 
 export const DELETE: APIRoute = async (ctx) => {
+
+    // Get the User
+    const currentUser  = await locals.currentUser()
+    let user = ( await db.select().from(Users).where(eq(Users.id, currentUser?.id)) )[0]
+
     const { id } = ctx.params
     await db.delete(Pages).where(and(
         eq(Pages.id, id),

@@ -34,7 +34,7 @@ const name = user?.firstName
                 <h2>All your Sites</h2>
 				<ul>
 					{
-						sites ? sites.map(item => <li><a href={`${Astro.url.pathname}${Astro.url.pathname.endsWith("/")?"":"/"}sites/${item.subdomain}/`}>{item.subdomain}</a></li>) : "There are no pages here. Create the first."
+						sites ? sites.map(item => <li><a href={`${Astro.url.pathname}${Astro.url.pathname.endsWith("/")?"":"/"}sites/${item.subdomain}/`}>{item.subdomain}</a></li>) : "There are no sites here. Create the first."
 					}
 				</ul>
                 Create a new site
