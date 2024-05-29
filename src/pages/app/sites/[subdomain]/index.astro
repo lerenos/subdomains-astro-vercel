@@ -31,9 +31,11 @@ const title = site.subdomain + " website"
 		<title>{title}</title>
 	</head>
 	<body class="prose mx-auto">
-		<h1>{title}</h1>
+        <a href={`/app/`} class="no-underline block py-8 font-medium text-sm text-base-content/70">&larr; Back to Home</a>
+        
+        <h1>{title}</h1>
 
-    <h2>Pages</h2>
+        <h2>Pages</h2>
         {
             pages ? <ul>
                 {pages.map(item => <li><a href={`${Astro.url.pathname}${Astro.url.pathname.endsWith("/")?"":"/"}pages/${item.id}`}>{item.title}</a></li>)}
@@ -41,7 +43,7 @@ const title = site.subdomain + " website"
                 <p>There are no pages here. Create the first.</p>
         }
 
-    <h2>Custom Links and Redirects</h2>
+        <h2>Custom Links and Redirects</h2>
         {
             redirects ? <ul>
                 {redirects.map(item => <li><a href={`/sites/${site.subdomain}/redirects/${item.id}`}>{item.title}</a></li>)}

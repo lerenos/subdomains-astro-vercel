@@ -56,6 +56,9 @@ const title = "Edit "+page.title
 		<title>{title}</title>
 	</head>
 	<body class="prose max-w-screen-lg mx-auto">
+
+    <a href={`/app/sites/${site.subdomain}`} class="no-underline block py-8 font-medium text-sm text-base-content/70">&larr; Back to All Pages</a>
+
 		<h1>{title}</h1>
 
     <form method="POST" class="form-control mb-4 p-4 gap-4">
